@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Pages Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --color-primary: #1a1a1a;
+      --color-primary-dark: #000000;
+      --color-secondary: #f8f9fa;
+      --color-accent: #e9ecef;
+      --color-body: #ffffff;
+      --color-white: #ffffff;
+      --color-text: #1a1a1a;
+      --color-text-light: #6c757d;
+      --color-text-muted: #adb5bd;
+      --color-border: #dee2e6;
+      --color-border-light: #f1f3f4;
+      --color-success: #198754;
+      --color-warning: #f59e0b;
+      --color-danger: #dc3545;
+      --color-info: #0dcaf0;
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 3rem;
+      --spacing-3xl: 4rem;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --transition-base: all 0.15s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-primary);
+      color: var(--color-text);
+      background-color: var(--color-secondary);
+      line-height: 1.5;
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+
+    .logo {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: none;
+      letter-spacing: -0.025em;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1;
+      text-decoration: none;
+      transition: var(--transition-base);
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-sm {
+      height: 2.25rem;
+      padding: 0 1rem;
+      font-size: 0.8125rem;
+    }
+
+    .btn-md {
+      height: 2.5rem;
+      padding: 0 1.25rem;
+    }
+
+    .btn-lg {
+      height: 3rem;
+      padding: 0 1.5rem;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-text-light);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-secondary);
+      color: var(--color-text);
+    }
+
+    .btn-success {
+      background-color: var(--color-success);
+      color: var(--color-white);
+    }
+
+    .btn-success:hover {
+      background-color: #157347;
+    }
+
+    .btn-warning {
+      background-color: var(--color-warning);
+      color: var(--color-white);
+    }
+
+    .btn-warning:hover {
+      background-color: #d97706;
+    }
+
+    .btn-danger {
+      background-color: var(--color-danger);
+      color: var(--color-white);
+    }
+
+    .btn-danger:hover {
+      background-color: #bb2d3b;
+    }
+
+    /* Main content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .main-content {
+      padding: 2rem 0;
+      min-height: calc(100vh - 4rem);
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      letter-spacing: -0.025em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--color-border-light);
+      background: var(--color-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--color-border-light);
+      background: var(--color-secondary);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-border-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-light);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition-base);
+    }
+
+    .tab:hover {
+      color: var(--color-text);
+    }
+
+    .tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text);
+      background-color: var(--color-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border-light);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    tr:hover {
+      background-color: var(--color-secondary);
+    }
+
+    /* Column widths */
+    th:nth-child(1), td:nth-child(1) {
+      width: 30%;
+    }
+    th:nth-child(2), td:nth-child(2) {
+      width: 15%;
+    }
+    th:nth-child(3), td:nth-child(3) {
+      width: 15%;
+    }
+    th:nth-child(4), td:nth-child(4) {
+      width: 20%;
+    }
+    th:nth-child(5), td:nth-child(5) {
+      width: 20%;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      transition: var(--transition-base);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Search and Filters */
+    .search-filters {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      min-width: 240px;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      background-color: var(--color-white);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+    }
+
+    .filter-select {
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      background-color: var(--color-white);
+      min-width: 150px;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.15s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      max-width: 500px;
+      width: 100%;
+      transform: scale(0.95);
+      transition: transform 0.15s ease;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .modal-close {
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      background: none;
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-base);
+    }
+
+    .modal-close:hover {
+      background: var(--color-secondary);
+      color: var(--color-text);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+
+    .modal-footer {
+      padding: 0 1.5rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--color-success);
+      color: var(--color-white);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 60;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      font-size: 0.875rem;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* Loader */
+    .loader {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--color-primary);
+      width: 40px;
+      height: 40px;
+      -webkit-animation: spin 1s linear infinite;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Description truncation */
+    .company-description {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .header-container {
+        padding: 0 1rem;
+      }
+      
+      .container {
+        padding: 0 1rem;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+        table-layout: auto;
+      }
+      
+      th, td {
+        min-width: 120px;
+      }
+    }
+
+    /* Utility classes */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mt-1 {
+      margin-top: 0.25rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .mt-4 {
+      margin-top: 1.5rem;
+    }
+
+    .mb-1 {
+      margin-bottom: 0.25rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-6 {
+      margin-bottom: 2.5rem;
+    }
+
+    .ml-2 {
+      margin-left: 0.5rem;
+    }
+
+    .mr-2 {
+      margin-right: 0.5rem;
+    }
+
+    .px-3 {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    .py-1 {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .py-2 {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .py-4 {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .px-1 {
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+    }
+
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .py-2 {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .p-2 {
+      padding: 0.5rem;
+    }
+
+    .p-6 {
+      padding: 1.5rem;
+    }
+
+    .p-8 {
+      padding: 2rem;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .space-x-4 > * + * {
+      margin-left: 1rem;
+    }
+
+    .space-x-8 > * + * {
+      margin-left: 2rem;
+    }
+
+    .space-y-4 > * + * {
+      margin-top: 1rem;
+    }
+
+    .rounded {
+      border-radius: var(--radius-md);
+    }
+
+    .rounded-md {
+      border-radius: var(--radius-md);
+    }
+
+    .rounded-lg {
+      border-radius: var(--radius-lg);
+    }
+
+    .border {
+      border: 1px solid var(--color-border);
+    }
+
+    .border-b {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .border-b-2 {
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .border-gray-200 {
+      border-color: var(--color-border-light);
+    }
+
+    .border-transparent {
+      border-color: transparent;
+    }
+
+    .border-blue-500 {
+      border-color: var(--color-primary);
+    }
+
+    .bg-white {
+      background-color: var(--color-white);
+    }
+
+    .bg-gray-50 {
+      background-color: var(--color-secondary);
+    }
+
+    .bg-gray-100 {
+      background-color: var(--color-accent);
+    }
+
+    .bg-blue-50 {
+      background-color: rgba(26, 26, 26, 0.05);
+    }
+
+    .bg-blue-600 {
+      background-color: var(--color-primary);
+    }
+
+    .bg-green-600 {
+      background-color: var(--color-success);
+    }
+
+    .bg-red-600 {
+      background-color: var(--color-danger);
+    }
+
+    .text-white {
+      color: var(--color-white);
+    }
+
+    .text-gray-500 {
+      color: var(--color-text-light);
+    }
+
+    .text-gray-700 {
+      color: var(--color-text);
+    }
+
+    .text-gray-800 {
+      color: var(--color-text);
+    }
+
+    .text-blue-600 {
+      color: var(--color-primary);
+    }
+
+    .text-blue-700 {
+      color: var(--color-primary-dark);
+    }
+
+    .text-red-600 {
+      color: var(--color-danger);
+    }
+
+    .text-red-700 {
+      color: var(--color-danger);
+    }
+
+    .text-green-600 {
+      color: var(--color-success);
+    }
+
+    .text-xs {
+      font-size: 0.75rem;
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .text-xl {
+      font-size: 1.25rem;
+    }
+
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+
+    .font-medium {
+      font-weight: 500;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .whitespace-nowrap {
+      white-space: nowrap;
+    }
+
+    .whitespace-normal {
+      white-space: normal;
+    }
+
+    .overflow-x-auto {
+      overflow-x: auto;
+    }
+
+    .overflow-hidden {
+      overflow: hidden;
+    }
+
+    .shadow {
+      box-shadow: var(--shadow-md);
+    }
+
+    .shadow-lg {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .shadow-md {
+      box-shadow: var(--shadow-md);
+    }
+
+    .hover\:shadow-lg:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .transition {
+      transition: var(--transition-base);
+    }
+
+    .disabled\:opacity-50:disabled {
+      opacity: 0.5;
+    }
+
+    .disabled\:cursor-not-allowed:disabled {
+      cursor: not-allowed;
+    }
+
+    .hover\:bg-gray-100:hover {
+      background-color: var(--color-accent);
+    }
+
+    .hover\:bg-gray-200:hover {
+      background-color: var(--color-accent);
+    }
+
+    .hover\:bg-gray-300:hover {
+      background-color: var(--color-border);
+    }
+
+    .hover\:bg-blue-700:hover {
+      background-color: var(--color-primary-dark);
+    }
+
+    .hover\:text-gray-700:hover {
+      color: var(--color-text);
+    }
+
+    .hover\:text-blue-800:hover {
+      color: var(--color-primary-dark);
+    }
+
+    .hover\:border-gray-300:hover {
+      border-color: var(--color-border);
+    }
+
+    .divide-y > * + * {
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    /* Grid and spacing utilities */
+    .grid {
+      display: grid;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gap-1 {
+      gap: 0.25rem;
+    }
+
+    .gap-2 {
+      gap: 0.5rem;
+    }
+
+    .gap-3 {
+      gap: 0.75rem;
+    }
+
+    .gap-4 {
+      gap: 1rem;
+    }
+
+    .gap-6 {
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .sm\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 768px) {
+      .md\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-80">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">Career Pages Admin</h2>
+      <div class="form-group">
+        <label for="admin-password" class="form-label">Admin Password</label>
+        <input type="password" id="admin-password" class="form-input">
+      </div>
+      <button id="login-button" class="btn btn-primary w-full">
+        Login
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content (Hidden until login) -->
+  <div id="main-content" class="hidden">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <h1 class="logo">Career Pages Admin Dashboard</h1>
+        <div class="flex items-center">
+          <span id="token-expiry" class="text-sm mr-4 text-gray-500"></span>
+          <button id="logout-button" class="btn btn-danger btn-sm">
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main-content">
+      <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+          <div class="tab active" data-tab="companies">Companies</div>
+          <div class="tab" data-tab="import">Import Data</div>
+        </div>
+
+        <!-- Companies Tab -->
+        <div id="companies-content" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Manage Companies</h2>
+              <div class="search-filters">
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    id="company-search" 
+                    placeholder="Search companies..." 
+                    class="search-input"
+                  >
+                </div>
+                <button id="refresh-companies" class="btn btn-secondary btn-sm">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+                <button id="add-company-button" class="btn btn-success btn-sm">
+                  <i class="fas fa-plus mr-2"></i> Add Company
+                </button>
+              </div>
+            </div>
+
+            <!-- Companies List -->
+            <div class="card-content p-0">
+              <div class="overflow-x-auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Company</th>
+                      <th>Industry</th>
+                      <th>Location</th>
+                      <th>Career Page</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="companies-table">
+                    <!-- Companies will be loaded here -->
+                    <tr>
+                      <td colspan="5" class="text-center py-4">
+                        <div class="flex justify-center">
+                          <div class="loader"></div>
+                        </div>
+                        <p class="mt-2">Loading companies...</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="card-footer flex items-center justify-between">
+              <div>
+                <span class="text-sm text-gray-700">
+                  Showing <span id="pagination-start">1</span> to <span id="pagination-end">10</span> of <span id="pagination-total">0</span> companies
+                </span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button id="prev-page" class="btn btn-secondary btn-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                  Previous
+                </button>
+                <span id="current-page" class="text-sm">Page 1</span>
+                <button id="next-page" class="btn btn-secondary btn-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Import Tab -->
+        <div id="import-content" class="tab-content hidden">
+          <div class="card mb-6">
+            <div class="card-header">
+              <h2 class="card-title">Import Companies from Excel</h2>
+            </div>
+            <div class="card-content">
+              <div class="mb-6">
+                <p class="text-sm text-gray-500 mb-2">Your Excel file should have the following columns:</p>
+                <div class="bg-gray-50 p-3 rounded border border-gray-200 text-sm">
+                  <code>Name, Career Page URL, Description, Industry, Location</code>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between mb-6">
+                <div class="form-group mb-0">
+                  <label for="excel-file" class="form-label">
+                    Upload Excel File
+                  </label>
+                  <input 
+                    type="file" 
+                    id="excel-file" 
+                    accept=".xlsx,.xls" 
+                    class="form-input"
+                  >
+                </div>
+                <button id="import-excel" class="btn btn-primary btn-md disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  Import Data
+                </button>
+              </div>
+
+              <div class="mt-4">
+                <h3 class="text-md font-medium text-gray-700 mb-2">Preview</h3>
+                <div id="excel-preview" class="overflow-x-auto border rounded p-2">
+                  <p class="text-gray-500 italic">Upload an Excel file to see preview</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Manual Data Entry</h2>
+            </div>
+            <div class="card-content">
+              <div class="form-group">
+                <label for="paste-data" class="form-label">
+                  Paste data from Excel (tab-separated values):
+                </label>
+                <textarea 
+                  id="paste-data" 
+                  rows="5" 
+                  class="form-input form-textarea font-mono text-sm"
+                  placeholder="Paste data from Excel here..."
+                ></textarea>
+              </div>
+              
+              <div class="flex justify-end">
+                <button id="process-paste" class="btn btn-primary btn-md">
+                  Process Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Company Modal -->
+  <div id="company-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title">Add New Company</h2>
+        <button id="close-modal" class="modal-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="company-form" class="space-y-4">
+          <input type="hidden" id="company-id">
+          
+          <div class="form-group">
+            <label for="company-name" class="form-label">Company Name *</label>
+            <input 
+              type="text" 
+              id="company-name" 
+              required
+              class="form-input"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="career-url" class="form-label">Career Page URL *</label>
+            <input 
+              type="url" 
+              id="career-url" 
+              required
+              class="form-input"
+              placeholder="https://example.com/careers"
+            >
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="industry" class="form-label">Industry</label>
+              <input 
+                type="text" 
+                id="industry"
+                class="form-input"
+              >
+            </div>
+            <div class="form-group">
+              <label for="location" class="form-label">Location</label>
+              <input 
+                type="text" 
+                id="location"
+                class="form-input"
+              >
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea 
+              id="description" 
+              rows="3"
+              class="form-input form-textarea"
+            ></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="logo" class="form-label">Logo</label>
+            <input 
+              type="file" 
+              id="logo"
+              accept="image/*"
+              class="form-input"
+            >
+          </div>
+          
+          <div id="current-logo-container" class="hidden form-group">
+            <label class="form-label">Current Logo</label>
+            <div class="flex items-center">
+              <img id="current-logo" src="" alt="Current Logo" class="h-16 object-contain border p-1 rounded">
+              <span class="ml-2 text-sm text-gray-500" id="logo-filename">logo.png</span>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" id="cancel-company" class="btn btn-secondary btn-md">
+          Cancel
+        </button>
+        <button type="submit" id="save-company" class="btn btn-primary btn-md">
+          Save Company
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    <span id="notification-text"></span>
+  </div>
+
+  <script>
+    // Global variables
+    let adminToken = '';
+    let tokenExpiration = null;
+    let currentPage = 1;
+    let totalCompanies = 0;
+    let companiesPerPage = 10;
+    let companies = [];
+    let isEditMode = false;
+    let searchTerm = '';
+    let excelData = null;
+
+    // DOM elements
+    const loginScreen = document.getElementById('login-screen');
+    const mainContent = document.getElementById('main-content');
+    const companyModal = document.getElementById('company-modal');
+    const tokenExpiryEl = document.getElementById('token-expiry');
+    
+    // Event listeners for login
+    document.getElementById('login-button').addEventListener('click', attemptLogin);
+    document.getElementById('admin-password').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') attemptLogin();
+    });
+    document.getElementById('logout-button').addEventListener('click', logout);
+
+    // Event listeners for tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        switchTab(tabId);
+      });
+    });
+
+    // Event listeners for company management
+    document.getElementById('add-company-button').addEventListener('click', showAddCompanyModal);
+    document.getElementById('close-modal').addEventListener('click', closeCompanyModal);
+    document.getElementById('cancel-company').addEventListener('click', closeCompanyModal);
+    document.getElementById('company-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveCompany();
+    });
+    document.getElementById('save-company').addEventListener('click', saveCompany);
+    document.getElementById('refresh-companies').addEventListener('click', () => loadCompanies(1));
+    document.getElementById('company-search').addEventListener('input', debounce((e) => {
+      searchTerm = e.target.value;
+      loadCompanies(1);
+    }, 300));
+    document.getElementById('prev-page').addEventListener('click', () => {
+      if (currentPage > 1) loadCompanies(currentPage - 1);
+    });
+    document.getElementById('next-page').addEventListener('click', () => {
+      loadCompanies(currentPage + 1);
+    });
+
+    // Event listeners for import functionality
+    document.getElementById('excel-file').addEventListener('change', handleExcelFileUpload);
+    document.getElementById('import-excel').addEventListener('click', importExcelData);
+    document.getElementById('process-paste').addEventListener('click', processPastedData);
+
+    // Check for existing token on load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check for saved token in localStorage
+      const savedToken = localStorage.getItem('adminToken');
+      const savedExpiration = localStorage.getItem('tokenExpiration');
+      
+      if (savedToken && savedExpiration) {
+        // Check if token is still valid
+        const expirationDate = new Date(parseInt(savedExpiration));
+        if (expirationDate > new Date()) {
+          // Token is still valid
+          adminToken = savedToken;
+          tokenExpiration = expirationDate;
+          
+          // Show main content
+          loginScreen.classList.add('hidden');
+          mainContent.classList.remove('hidden');
+          
+          // Update expiration display
+          updateExpirationDisplay();
+          
+          // Load companies
+          loadCompanies(1);
+          
+          // Start expiration check
+          startExpirationCheck();
+          
+          return;
+        } else {
+          // Token expired, remove from storage
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('tokenExpiration');
+        }
+      }
+    });
+
+    // Login function
+    function attemptLogin() {
+      const password = document.getElementById('admin-password').value;
+      
+      fetch('/api/career/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ adminPassword: password })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid password');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success && data.token) {
+          // Store token and expiration
+          adminToken = data.token;
+          tokenExpiration = new Date(data.expiration);
+          
+          // Save to localStorage for persistence
+          localStorage.setItem('adminToken', adminToken);
+          localStorage.setItem('tokenExpiration', tokenExpiration.getTime().toString());
+          
+          // Update expiration display
+          updateExpirationDisplay();
+          
+          // Show main content
+          loginScreen.classList.add('hidden');
+          mainContent.classList.remove('hidden');
+          
+          // Load companies
+          loadCompanies(1);
+          
+          // Start expiration check
+          startExpirationCheck();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Server response was invalid'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Login error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Access Denied',
+          text: 'Invalid admin password'
+        });
+      });
+    }
+
+    // Start token expiration check
+    function startExpirationCheck() {
+      // Check every minute
+      setInterval(() => {
+        if (!tokenExpiration) return;
+        
+        const now = new Date();
+        const timeLeft = tokenExpiration.getTime() - now.getTime();
+        
+        // Update display
+        updateExpirationDisplay();
+        
+        // If less than 5 minutes left, show warning
+        if (timeLeft < 5 * 60 * 1000 && timeLeft > 0) {
+          showNotification('Session expires soon. Please save your work and refresh the page.', 'warning');
+        }
+        
+        // If expired, force logout
+        if (timeLeft <= 0) {
+          showNotification('Session expired. Please log in again.', 'error');
+          logout();
+        }
+      }, 60 * 1000); // Check every minute
+    }
+
+    // Update token expiration display
+    function updateExpirationDisplay() {
+      if (!tokenExpiration) return;
+      
+      const now = new Date();
+      const timeLeft = tokenExpiration.getTime() - now.getTime();
+      
+      if (timeLeft <= 0) {
+        tokenExpiryEl.textContent = 'Session expired';
+        tokenExpiryEl.style.color = 'var(--color-danger)';
+        return;
+      }
+      
+      const minutes = Math.floor(timeLeft / (60 * 1000));
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      
+      let timeString = '';
+      if (hours > 0) {
+        timeString = `Session: ${hours}h ${mins}m remaining`;
+      } else {
+        timeString = `Session: ${mins}m remaining`;
+      }
+      
+      tokenExpiryEl.textContent = timeString;
+      
+      // Change color when getting low
+      if (minutes < 10) {
+        tokenExpiryEl.style.color = 'var(--color-danger)';
+      } else if (minutes < 30) {
+        tokenExpiryEl.style.color = 'var(--color-warning)';
+      } else {
+        tokenExpiryEl.style.color = 'var(--color-text-light)';
+      }
+    }
+
+    // Logout function
+    function logout() {
+      adminToken = '';
+      tokenExpiration = null;
+      
+      // Clear localStorage
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('tokenExpiration');
+      
+      // Reset UI
+      loginScreen.classList.remove('hidden');
+      mainContent.classList.add('hidden');
+      document.getElementById('admin-password').value = '';
+    }
+
+    // Switch between tabs
+    function switchTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+      });
+      
+      // Show corresponding content
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.add('hidden');
+      });
+      document.getElementById(`${tab}-content`).classList.remove('hidden');
+    }
+
+    // Admin API fetch function with token
+    async function adminFetch(url, options = {}) {
+      // Set up headers with admin token
+      const headers = {
+        ...options.headers || {},
+        'Admin-Token': adminToken
+      };
+      
+      // Make request
+      const response = await fetch(url, {
+        ...options,
+        headers
+      });
+      
+      // Handle token expiration
+      if (response.status === 401) {
+        showNotification('Session expired. Please log in again.', 'error');
+        logout();
+        throw new Error('Unauthorized');
+      }
+      
+      return response;
+    }
+
+    // Load companies with pagination
+    function loadCompanies(page) {
+      currentPage = page;
+      updatePaginationUI();
+      
+      const tableBody = document.getElementById('companies-table');
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center py-4">
+            <div class="flex justify-center">
+              <div class="loader"></div>
+            </div>
+            <p class="mt-2">Loading companies...</p>
+          </td>
+        </tr>
+      `;
+      
+      adminFetch('/api/career/admin/companies', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          page,
+          limit: companiesPerPage,
+          search: searchTerm || undefined
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to load companies: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        companies = data.companies;
+        totalCompanies = data.total;
+        
+        renderCompaniesTable();
+        updatePaginationUI();
+      })
+      .catch(error => {
+        console.error('Error loading companies:', error);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-4 text-red-600">
+              <div>Error loading companies. Please try again.</div>
+              <div class="text-sm mt-1">${error.message}</div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Update pagination UI
+    function updatePaginationUI() {
+      const start = (currentPage - 1) * companiesPerPage + 1;
+      const end = Math.min(currentPage * companiesPerPage, totalCompanies);
+      
+      document.getElementById('pagination-start').textContent = totalCompanies > 0 ? start : 0;
+      document.getElementById('pagination-end').textContent = end;
+      document.getElementById('pagination-total').textContent = totalCompanies;
+      document.getElementById('current-page').textContent = `Page ${currentPage}`;
+      
+      document.getElementById('prev-page').disabled = currentPage <= 1;
+      document.getElementById('next-page').disabled = end >= totalCompanies;
+    }
+
+    // Render companies table
+    function renderCompaniesTable() {
+      const tableBody = document.getElementById('companies-table');
+      
+      if (companies.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-4 text-gray-500">
+              No companies found. Add a new company or import data to get started.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tableBody.innerHTML = '';
+      
+      // Create a row for each company
+      companies.forEach(company => {
+        const row = document.createElement('tr');
+        
+        // Truncate description to first 5 words
+        const fullDescription = company.description || 'No description';
+        const truncatedDescription = fullDescription.split(' ').slice(0, 5).join(' ');
+        const displayDescription = truncatedDescription + (fullDescription.split(' ').length > 5 ? '...' : '');
+        
+        // Company name and description
+        const nameCell = document.createElement('td');
+        nameCell.className = 'whitespace-nowrap';
+        nameCell.innerHTML = `
+          <div class="flex items-center">
+            ${company.logo_url ? 
+              `<img class="h-10 w-10 mr-3 object-contain bg-gray-50 rounded" src="${company.logo_url}" alt="${escapeHTML(company.name)} logo">` : 
+              `<div class="h-10 w-10 mr-3 flex items-center justify-center bg-gray-100 rounded text-gray-500">
+                <i class="fas fa-building"></i>
+              </div>`
+            }
+            <div>
+              <div class="font-medium text-gray-900">${escapeHTML(company.name)}</div>
+              <div class="company-description text-sm text-gray-500" title="${escapeHTML(fullDescription)}">
+                ${escapeHTML(displayDescription)}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Industry
+        const industryCell = document.createElement('td');
+        industryCell.className = 'whitespace-nowrap';
+        industryCell.innerHTML = `
+          <span class="px-2 py-1 text-xs rounded-full ${company.industry ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-700'}">
+            ${escapeHTML(company.industry || 'Not specified')}
+          </span>
+        `;
+        
+        // Location
+        const locationCell = document.createElement('td');
+        locationCell.className = 'whitespace-nowrap';
+        locationCell.innerHTML = `
+          <span class="px-2 py-1 text-xs rounded-full ${company.location ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-700'}">
+            ${escapeHTML(company.location || 'Not specified')}
+          </span>
+        `;
+        
+        // Career page link
+        const linkCell = document.createElement('td');
+        linkCell.className = 'whitespace-nowrap';
+        linkCell.innerHTML = `
+          <a href="${company.career_page_url}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+            View <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+          </a>
+        `;
+        
+        // Actions
+        const actionsCell = document.createElement('td');
+        actionsCell.className = 'whitespace-nowrap text-right text-sm font-medium';
+        
+        // Edit button
+        const editButton = document.createElement('button');
+        editButton.className = 'text-blue-600 hover:text-blue-800 mr-3';
+        editButton.title = 'Edit';
+        editButton.innerHTML = '<i class="fas fa-edit"></i>';
+        editButton.addEventListener('click', () => editCompany(company.id));
+        
+        // Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'text-red-600 hover:text-red-700';
+        deleteButton.title = 'Delete';
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteButton.addEventListener('click', () => confirmDeleteCompany(company.id, company.name));
+        
+        actionsCell.appendChild(editButton);
+        actionsCell.appendChild(deleteButton);
+        
+        // Add all cells to the row
+        row.appendChild(nameCell);
+        row.appendChild(industryCell);
+        row.appendChild(locationCell);
+        row.appendChild(linkCell);
+        row.appendChild(actionsCell);
+        
+        // Add row to table
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Show modal to add a new company
+    function showAddCompanyModal() {
+      document.getElementById('modal-title').textContent = 'Add New Company';
+      document.getElementById('company-id').value = '';
+      document.getElementById('company-form').reset();
+      document.getElementById('current-logo-container').classList.add('hidden');
+      isEditMode = false;
+      companyModal.classList.add('active');
+    }
+
+    // Edit company
+    function editCompany(id) {
+      const company = companies.find(c => c.id === id);
+      if (!company) return;
+      
+      document.getElementById('modal-title').textContent = 'Edit Company';
+      document.getElementById('company-id').value = company.id;
+      document.getElementById('company-name').value = company.name;
+      document.getElementById('career-url').value = company.career_page_url;
+      document.getElementById('industry').value = company.industry || '';
+      document.getElementById('location').value = company.location || '';
+      document.getElementById('description').value = company.description || '';
+      
+      // Show current logo if exists
+      if (company.logo_url) {
+        document.getElementById('current-logo-container').classList.remove('hidden');
+        document.getElementById('current-logo').src = company.logo_url;
+        document.getElementById('logo-filename').textContent = company.logo_url.split('/').pop();
+      } else {
+        document.getElementById('current-logo-container').classList.add('hidden');
+      }
+      
+      isEditMode = true;
+      companyModal.classList.add('active');
+    }
+
+    // Close company modal
+    function closeCompanyModal() {
+      companyModal.classList.remove('active');
+    }
+
+    // Save company (add new or update existing)
+    function saveCompany() {
+      try {
+        const id = document.getElementById('company-id').value;
+        const name = document.getElementById('company-name').value;
+        const careerUrl = document.getElementById('career-url').value;
+        const industry = document.getElementById('industry').value;
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('description').value;
+        const logoFile = document.getElementById('logo').files[0];
+        
+        // Validate required fields
+        if (!name || !careerUrl) {
+          showNotification('Company name and career page URL are required', 'error');
+          return;
+        }
+        
+        // Create form data for file upload
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('career_page_url', careerUrl);
+        formData.append('industry', industry);
+        formData.append('location', location);
+        formData.append('description', description);
+        
+        if (logoFile) {
+          formData.append('logo', logoFile);
+        }
+        
+        let url, method;
+        
+        if (isEditMode) {
+          url = `/api/career/admin/company/${id}`;
+          method = 'PUT';
+        } else {
+          url = '/api/career/admin/company';
+          method = 'POST';
+        }
+        
+        // Show loading indicator
+        const saveBtn = document.getElementById('save-company');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+        
+        adminFetch(url, {
+          method,
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to save company');
+          }
+          return response.json();
+        })
+        .then(data => {
+          closeCompanyModal();
+          showNotification(isEditMode ? 'Company updated successfully' : 'Company added successfully');
+          loadCompanies(currentPage);
+        })
+        .catch(error => {
+          console.error('Error saving company:', error);
+          showNotification('Error saving company. Please try again.', 'error');
+        })
+        .finally(() => {
+          // Reset button
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Company';
+        });
+      } catch (error) {
+        console.error('Error in saveCompany:', error);
+        showNotification('An unexpected error occurred', 'error');
+      }
+    }
+
+    // Confirm company deletion
+    function confirmDeleteCompany(id, name) {
+      Swal.fire({
+        title: 'Delete Company',
+        html: `Are you sure you want to delete <strong>${escapeHTML(name)}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteCompany(id);
+        }
+      });
+    }
+
+    // Delete company
+    function deleteCompany(id) {
+      adminFetch(`/api/career/admin/company/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete company');
+        }
+        return response.json();
+      })
+      .then(data => {
+        showNotification('Company deleted successfully');
+        loadCompanies(currentPage);
+      })
+      .catch(error => {
+        console.error('Error deleting company:', error);
+        showNotification('Error deleting company. Please try again.', 'error');
+      });
+    }
+
+    // Handle Excel file upload
+    function handleExcelFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) {
+        document.getElementById('import-excel').disabled = true;
+        document.getElementById('excel-preview').innerHTML = '<p class="text-gray-500 italic">Upload an Excel file to see preview</p>';
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          
+          // Get first sheet
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          
+          // Convert to JSON
+          excelData = XLSX.utils.sheet_to_json(worksheet);
+          
+          if (excelData.length === 0) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No data found in the Excel file.',
+              confirmButtonColor: '#3085d6'
+            });
+            return;
+          }
+          
+          // Enable import button
+          document.getElementById('import-excel').disabled = false;
+          
+          // Show preview
+          renderExcelPreview(excelData);
+        } catch (error) {
+          console.error('Error parsing Excel file:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to parse Excel file. Please check the file format.',
+            confirmButtonColor: '#3085d6'
+          });
+        }
+      };
+      
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Render Excel preview
+    function renderExcelPreview(data) {
+      if (data.length === 0) {
+        document.getElementById('excel-preview').innerHTML = '<p class="text-gray-500 italic">No data found in the Excel file</p>';
+        return;
+      }
+      
+      // Get headers
+      const headers = Object.keys(data[0]);
+      
+      // Create table
+      let tableHTML = `
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                ${headers.map(header => `<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${escapeHTML(header)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+      `;
+      
+      // Only show first 5 rows for preview
+      const previewData = data.slice(0, 5);
+      
+      previewData.forEach(row => {
+        tableHTML += '<tr>';
+        headers.forEach(header => {
+          const value = row[header] !== undefined ? row[header] : '';
+          tableHTML += `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${escapeHTML(String(value))}</td>`;
+        });
+        tableHTML += '</tr>';
+      });
+      
+      tableHTML += `
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Showing ${previewData.length} of ${data.length} rows</p>
+      `;
+      
+      document.getElementById('excel-preview').innerHTML = tableHTML;
+    }
+
+    // Import Excel data
+    function importExcelData() {
+      if (!excelData || excelData.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No data to import.',
+          confirmButtonColor: '#3085d6'
+        });
+        return;
+      }
+      
+      // Check required columns
+      const firstRow = excelData[0];
+      const hasRequiredColumns = firstRow.hasOwnProperty('Name') && firstRow.hasOwnProperty('Career Page URL');
+      
+      if (!hasRequiredColumns) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Format',
+          text: 'Excel file must contain "Name" and "Career Page URL" columns.',
+          confirmButtonColor: '#3085d6'
+        });
+        return;
+      }
+      
+      // Get the Excel file
+      const file = document.getElementById('excel-file').files[0];
+      if (!file) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Please select an Excel file.',
+          confirmButtonColor: '#3085d6'
+        });
+        return;
+      }
+      
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Show loading
+      Swal.fire({
+        title: 'Importing...',
+        html: 'Please wait while we import the data.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
+      adminFetch('/api/career/admin/import', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to import data: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(result => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Import Successful',
+          html: `${result.imported} companies imported.<br>${result.invalid} invalid entries skipped.`,
+          confirmButtonColor: '#3085d6'
+        });
+        
+        // Reset the form
+        document.getElementById('excel-file').value = '';
+        document.getElementById('import-excel').disabled = true;
+        document.getElementById('excel-preview').innerHTML = '<p class="text-gray-500 italic">Upload an Excel file to see preview</p>';
+        excelData = null;
+        
+        // Switch to companies tab and refresh
+        switchTab('companies');
+        loadCompanies(1);
+      })
+      .catch(error => {
+        console.error('Error importing Excel data:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Import Failed',
+          text: error.message,
+          confirmButtonColor: '#3085d6'
+        });
+      });
+    }
+
+    // Process pasted data
+    function processPastedData() {
+      const pastedText = document.getElementById('paste-data').value.trim();
+      
+      if (!pastedText) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Please paste data from Excel.',
+          confirmButtonColor: '#3085d6'
+        });
+        return;
+      }
+      
+      try {
+        // Parse the pasted data (assuming tab-separated)
+        const rows = pastedText.split('\n');
+        
+        // Check if there's a header row
+        let hasHeader = true;
+        const firstRow = rows[0].split('\t');
+        
+        // Check if first row might be column names
+        const possibleColumnNames = ['Name', 'Company', 'Career', 'URL', 'Description', 'Industry', 'Location'];
+        const isLikelyHeader = firstRow.some(cell => 
+          possibleColumnNames.some(col => cell.includes(col))
+        );
+        
+        if (!isLikelyHeader) {
+          hasHeader = false;
+        }
+        
+        // Create data with appropriate headers
+        const parsedData = [];
+        
+        if (hasHeader) {
+          const headers = rows[0].split('\t');
+          
+          // Map common header variations to standard names
+          const headerMap = {
+            'Company': 'Name',
+            'Company Name': 'Name',
+            'Career Page': 'Career Page URL',
+            'Career URL': 'Career Page URL',
+            'URL': 'Career Page URL',
+            'Industry Type': 'Industry',
+            'Company Location': 'Location'
+          };
+          
+          // Standardize headers
+          const standardHeaders = headers.map(h => headerMap[h] || h);
+          
+          // Parse data rows
+          for (let i = 1; i < rows.length; i++) {
+            if (!rows[i].trim()) continue;
+            
+            const cells = rows[i].split('\t');
+            const rowData = {};
+            
+            for (let j = 0; j < Math.min(standardHeaders.length, cells.length); j++) {
+              rowData[standardHeaders[j]] = cells[j];
+            }
+            
+            parsedData.push(rowData);
+          }
+        } else {
+          // Assume specific column order if no header: Name, URL, Description, Industry, Location
+          const assumedHeaders = ['Name', 'Career Page URL', 'Description', 'Industry', 'Location'];
+          
+          for (let i = 0; i < rows.length; i++) {
+            if (!rows[i].trim()) continue;
+            
+            const cells = rows[i].split('\t');
+            const rowData = {};
+            
+            for (let j = 0; j < Math.min(assumedHeaders.length, cells.length); j++) {
+              rowData[assumedHeaders[j]] = cells[j];
+            }
+            
+            parsedData.push(rowData);
+          }
+        }
+        
+        // Check if we have valid data
+        if (parsedData.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'No Valid Data',
+            text: 'Could not parse any valid data from the pasted text.',
+            confirmButtonColor: '#3085d6'
+          });
+          return;
+        }
+        
+        // Validate data has required fields
+        const validData = parsedData.filter(row => 
+          row.Name && (row['Career Page URL'] || row.URL)
+        );
+        
+        if (validData.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Data',
+            text: 'Pasted data must contain company names and career page URLs.',
+            confirmButtonColor: '#3085d6'
+          });
+          return;
+        }
+        
+        // Show confirmation with stats
+        Swal.fire({
+          icon: 'question',
+          title: 'Import Data',
+          html: `Found ${validData.length} valid companies to import.<br>${parsedData.length - validData.length} entries are invalid (missing name or URL).<br>Continue with import?`,
+          showCancelButton: true,
+          confirmButtonText: 'Import',
+          confirmButtonColor: '#3085d6',
+          cancelButtonText: 'Cancel',
+          cancelButtonColor: '#d33'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            importParsedData(validData);
+          }
+        });
+      } catch (error) {
+        console.error('Error processing pasted data:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to process pasted data. Please check the format.',
+          confirmButtonColor: '#3085d6'
+        });
+      }
+    }
+
+    // Import parsed data
+    async function importParsedData(data) {
+      try {
+        // Show loading
+        Swal.fire({
+          title: 'Importing...',
+          html: 'Please wait while we import the data.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        
+        let importedCount = 0;
+        let errorCount = 0;
+        
+        // Import each company individually
+        for (const company of data) {
+          try {
+            const response = await adminFetch('/api/career/admin/company', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                name: company.Name,
+                career_page_url: company['Career Page URL'] || company.URL,
+                description: company.Description || '',
+                industry: company.Industry || '',
+                location: company.Location || ''
+              })
+            });
+            
+            if (response.ok) {
+              importedCount++;
+            } else {
+              errorCount++;
+            }
+          } catch (error) {
+            console.error('Error importing company:', error);
+            errorCount++;
+          }
+        }
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Import Complete',
+          html: `Successfully imported ${importedCount} companies.<br>${errorCount} companies failed to import.`,
+          confirmButtonColor: '#3085d6'
+        });
+        
+        // Clear the textarea
+        document.getElementById('paste-data').value = '';
+        
+        // Switch to companies tab and refresh
+        switchTab('companies');
+        loadCompanies(1);
+      } catch (error) {
+        console.error('Error importing parsed data:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to import data. Please try again.',
+          confirmButtonColor: '#3085d6'
+        });
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      notification.className = 'notification';
+      
+      if (type === 'error') {
+        notification.style.backgroundColor = 'var(--color-danger)';
+      } else if (type === 'warning') {
+        notification.style.backgroundColor = 'var(--color-warning)';
+      } else {
+        notification.style.backgroundColor = 'var(--color-success)';
+      }
+      
+      document.getElementById('notification-text').textContent = message;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+  </script>
+</body>
+</html>
